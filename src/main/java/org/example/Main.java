@@ -90,8 +90,6 @@ public class Main {
         }
         response.setResult(result);
         String body=objectMapper.writeValueAsString(response);
-        System.out.println(body);
-
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
         RequestBody requestBody = RequestBody.create(body, JSON);

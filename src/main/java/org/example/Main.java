@@ -6,9 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.JsonParserDelegate;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -93,5 +91,22 @@ public class Main {
         response.setResult(result);
         String body=objectMapper.writeValueAsString(response);
         System.out.println(body);
+
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        RequestBody requestBody = RequestBody.create(body, JSON);
+        Request.Builder requestBuilder = new Request.Builder().url("https://procodeday-01.herokuapp.com/meet-up/post-request").post(requestBody);
+        Request request = requestBuilder.build();
+        System.out.println(request.body().toString());
+
+        try (okhttp3.Response response1 = client.newCall(request).execute()) {
+            if (!response1.isSuccessful()) {
+                throw new IOException("Запрос к серверу не был успешен: " +
+                        response1.code() + " " + response1.message());
+            }
+            System.out.println(response1.body().string());
+        } catch (IOException e) {
+            System.out.println("Ошибка подключения: " + e);
+        }
     }
 }
